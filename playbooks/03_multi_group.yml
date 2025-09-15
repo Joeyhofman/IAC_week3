@@ -1,0 +1,25 @@
+---
+- name: Configure app servers
+  hosts: app
+  become: true
+  tasks:
+    - name: Install chrony
+      ansible.builtin.package:
+        name: "{{ app_package }}"
+        state: present
+      tags: packages
+    - name: Ensure chrony service is running and enabled
+      ansible.builtin.service:
+        name: "{{ app_service }}"
+        state: started
+        enabled: true
+      tags: services
+- name: Configure db servers
+  hosts: db
+  become: true
+  tasks:
+    - name: Install curl
+      ansible.builtin.package:
+        name: "{{ db_package }}"
+        state: present
+      tags: packages
