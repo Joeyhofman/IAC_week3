@@ -1,0 +1,38 @@
+---
+- name: Idempotence & Guardrails
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure /tmp/demo.txt exists
+      ansible.builtin.file:
+        path: /tmp/demo.txt
+        state: touch
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Copy config file to /etc/demo.conf
+      ansible.builtin.copy:
+        src: files/demo.conf.j2
+        dest: /etc/demo.conf
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Check if /tmp/demo.txt exists
+      ansible.builtin.stat:
+        path: /tmp/demo.txt
+      register: demo_file
+    - name: Assert that /tmp/demo.txt exists
+      ansible.builtin.assert:
+        that:
+          - demo_file.stat.exists
+        fail_msg: "/tmp/demo.txt ontbreekt!"
+        success_msg: "/tmp/demo.txt is aanwezig."
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+    - name: Assert that ssh is enabled
+      ansible.builtin.assert:
+        that:
+          - ("ssh.service" in ansible_facts.services and
+            ansible_facts.services['ssh.service'].status == "enabled")
+        fail_msg: "ssh draait niet of is niet enabled!"
+        success_msg: "ssh service is enabled."
