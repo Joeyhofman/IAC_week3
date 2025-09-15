@@ -1,0 +1,19 @@
+---
+- name: Install package and ensure service for app hosts
+  hosts: app
+  become: yes
+  vars:
+    app_package: nginx
+    app_service: nginx
+  tasks:
+    - name: Install package (packages)
+      ansible.builtin.package:
+        name: "{{ app_package }}"
+        state: present
+      tags: packages
+    - name: Ensure service is started and enabled (services)
+      ansible.builtin.service:
+        name: "{{ app_service }}"
+        state: started
+        enabled: true
+      tags: services
