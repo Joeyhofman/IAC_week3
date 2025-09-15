@@ -1,0 +1,15 @@
+---
+- name: Run smoketest on all hosts
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Ping all hosts
+      ansible.builtin.ping:
+    - name: Check uptime (smoketest)
+      ansible.builtin.command: uptime
+      register: uptime_result
+      changed_when: false
+    - name: Show uptime output
+      ansible.builtin.debug:
+        var: uptime_result.stdout
+- import_playbook: 03_multi_group.yml
