@@ -1,0 +1,26 @@
+users:
+  - name: alice
+    shell: /bin/bash
+    state: present
+  - name: bob
+    shell: /bin/zsh
+    state: present
+  - name: charlie
+    shell: /bin/bash
+    state: absent
+files:
+  - path: /opt/appdir
+    state: directory
+    owner: alice
+    group: alice
+    mode: "0755"
+  - path: /opt/dbdir
+    state: directory
+    owner: bob
+    group: bob
+    mode: "0700"
+  - path: /opt/testfile.txt
+    state: touch
+    owner: root
+    group: root
+    mode: "0644"
